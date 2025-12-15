@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum Visitor Satisfaction Survey</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f5f3;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Utility Class for Toggling Address Fields */
+        .hidden {
+            display: none !important;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .left {
+            background: linear-gradient(135deg, rgba(128, 0, 0, 0.7) 0%, rgba(165, 42, 42, 0.7) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: -1;
+        }
+        
+        .bg-image.active {
+            opacity: 1;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+        
+        .right {
+            background-color: #f9f5f3;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            border: 1px solid #e8e0dd;
+        }
+        
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .page.exiting {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #800000;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #a52a2a;
+            border-radius: 2px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #800000;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #a52a2a;
+            box-shadow: 0 0 0 3px rgba(165, 42, 42, 0.2);
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            background-color: #800000;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background-color: #a52a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #800000;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+            line-height: 1.4;
+        }
+        
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .left-btn {
+            background-color: transparent;
+            color: #800000;
+            border: 1px solid #800000;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .left-btn:hover {
+            background-color: #f9eaea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .thank {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        .thank h2 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .thank p {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+        
+        .address-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 480px) {
+            .address-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .address-section {
+            grid-column: 1 / -1;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .district-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .district-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem 0.2rem;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #fff;
+            font-size: 0.9rem;
+        }
+        
+        .district-option:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-color: #a52a2a;
+        }
+        
+        .district-option.selected {
+            background-color: #f9eaea;
+            border-color: #a52a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(165, 42, 42, 0.2);
+        }
+        
+        .recommend-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .recommend-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+        
+        .recommend-option:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-color: #a52a2a;
+        }
+        
+        .recommend-option.selected {
+            background-color: #f9eaea;
+            border-color: #a52a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(165, 42, 42, 0.2);
+        }
+        
+        .consent-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .consent-check input {
+            width: auto;
+            margin-top: 0.25rem;
+            transform: scale(1.2);
+        }
+        
+        .consent-text {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        /* --- NEW STYLES FOR DYNAMIC SURVEY QUESTIONS --- */
+        
+        .progress-small {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #800000, #a52a2a);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+            border-radius: 4px;
+        }
+
+        .step-indicator {
+            text-align: right;
+            margin-bottom: 1.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .rating-scale {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #800000;
+        }
+
+        .rating-scale p {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .rating-options-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .rating-legend-item span:first-child {
+            font-weight: bold;
+            color: #800000;
+        }
+
+        /* Styles for the dynamic options generated by JS */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            display: block;
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+            text-align: left;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: #a52a2a;
+            background-color: #fff5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .option.selected {
+            background-color: #800000;
+            color: white;
+            border-color: #800000;
+            font-weight: 600;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(128, 0, 0, 0.2);
+        }
+        
+        /* --- END NEW STYLES --- */
+
+        /* Animation Keyframes */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        /* Success Animation */
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+        
+        .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid #27ae60;
+        }
+        
+        .check-icon::before {
+            top: 3px; left: -2px; width: 30px;
+            transform-origin: 100% 50%;
+            border-radius: 100px 0 0 100px;
+        }
+        
+        .check-icon::after {
+            top: 0; left: 30px; width: 60px;
+            transform-origin: 0 50%;
+            border-radius: 0 100px 100px 0;
+            animation: rotate-circle 4.25s ease-in;
+        }
+        
+        .check-icon::before, .check-icon::after {
+            content: ''; height: 100px; position: absolute; background: white; transform: rotate(-45deg);
+        }
+        
+        .icon-line {
+            height: 5px; background-color: #27ae60; display: block; border-radius: 2px; position: absolute; z-index: 10;
+        }
+        
+        .icon-line.line-tip {
+            top: 46px; left: 14px; width: 25px; transform: rotate(45deg); animation: icon-line-tip 0.75s;
+        }
+        
+        .icon-line.line-long {
+            top: 38px; right: 8px; width: 47px; transform: rotate(-45deg); animation: icon-line-long 0.75s;
+        }
+        
+        @keyframes rotate-circle {
+            0% { transform: rotate(-45deg); }
+            5% { transform: rotate(-45deg); }
+            12% { transform: rotate(-405deg); }
+            100% { transform: rotate(-405deg); }
+        }
+        
+        @keyframes icon-line-tip {
+            0% { width: 0; left: 1px; top: 19px; }
+            54% { width: 0; left: 1px; top: 19px; }
+            70% { width: 50px; left: -8px; top: 37px; }
+            84% { width: 17px; left: 21px; top: 48px; }
+            100% { width: 25px; left: 14px; top: 45px; }
+        }
+        
+        @keyframes icon-line-long {
+            0% { width: 0; right: 46px; top: 54px; }
+            65% { width: 0; right: 46px; top: 54px; }
+            84% { width: 55px; right: 0px; top: 35px; }
+            100% { width: 47px; right: 8px; top: 38px; }
+        }
+        
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .panel { padding: 1.5rem; }
+            .left { min-height: 200px; }
+            .hero h1 { font-size: 2rem; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="panel left">
+            <div class="bg-image active" style="background-image: url('1.png')"></div>
+            <div class="bg-image active" style="background-image: url('2.png')"></div>
+            <div class="bg-image active" style="background-image: url('3.png')"></div>
+            <div class="bg-image active" style="background-image: url('4.png')"></div>   
+            <div class="bg-image active" style="background-image: url('5.png')"></div>         
+            
+            <div class="hero">
+                <h1>Museum Visitor Survey</h1>
+                <p>Help us improve your museum experience by sharing your feedback.</p>
+            </div>
+        </section>
+
+        <section class="panel right">
+            <div class="card">
+                <div id="profile-page" class="page active">
+                    <h2>Please fill in your details</h2>
+                    <form id="profile-form">
+                        <div class="form-grid">
+                            <div>
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required />
+                            </div>
+                            <div>
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required />
+                            </div>
+                            <div class="full-width">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required />
+                            </div>
+
+                            <div class="address-section">
+                                <label>Address</label>
+                                <div class="address-grid">
+                                    <div class="full-width">
+                                        <input type="text" id="street-address" name="street-address" placeholder="Street Address" />
+                                    </div>
+
+                                    <div class="full-width">
+                                        <label>Select Location</label>
+                                        <div class="district-options">
+                                            <div class="district-option" data-district="1">District 1</div>
+                                            <div class="district-option" data-district="2">District 2</div>
+                                            <div class="district-option" data-district="outside">Outside Valenzuela</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="full-width" id="barangay-container">
+                                        <label for="barangay">Barangay</label>
+                                        <select id="barangay" name="barangay">
+                                            <option value="">Select Barangay</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="full-width hidden" id="outside-container">
+                                        <label for="other-specify-input">City / Province</label>
+                                        <input type="text" id="other-specify-input" name="other-specify" placeholder="e.g. Quezon City, Bulacan" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="age">Age</label>
+                                <select id="age" name="age" required>
+                                    <option value="">Select Age Range</option>
+                                    <option value="below-18">Below 18</option>
+                                    <option value="18-29">18–29</option>
+                                    <option value="30-43">30–43</option>
+                                    <option value="44-59">44–59</option>
+                                    <option value="59-and-above">59 and above</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender">
+                                    <option value="">Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn" type="submit">Start Survey</button>
+                        </div>
+                    </form>
+                </div>
+
+                 <div id="museum-survey-page" class="page">
+                    <div class="progress-small"><div id="progress-bar" class="progress-bar"></div></div>
+                    <div class="step-indicator">Question <span id="q-index">1</span> of <span id="q-total">--</span></div>
+
+                    <div class="rating-scale">
+                        <p>Rating Scale Legend:</p>
+                        <div class="rating-options-legend">
+                            <div class="rating-legend-item"><span>5</span> - Excellent</div>
+                            <div class="rating-legend-item"><span>4</span> - Good</div>
+                            <div class="rating-legend-item"><span>3</span> - Fair</div>
+                            <div class="rating-legend-item"><span>2</span> - Poor</div>
+                            <div class="rating-legend-item"><span>1</span> - Very Poor</div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="question-text" style="min-height: 80px; display: flex; align-items: center;">Loading questions...</div>
+                    
+                    <div class="options" id="options-area">
+                        </div>
+
+                    <div class="nav-actions">
+                        <button id="prev-btn" class="left-btn">Back</button>
+                        <button id="next-btn" class="btn">Next</button>
+                    </div>
+                </div>
+
+
+                <div id="feedback-page" class="page">
+                    <h2>Visitor Feedback</h2>
+                    
+                    <div class="question">What did you like the most about the museum?</div>
+                    <textarea id="liked-most" placeholder="Please share what you enjoyed most"></textarea>
+
+                    <div class="question">What aspects need improvement?</div>
+                    <textarea id="improvements" placeholder="Your suggestions"></textarea>
+
+                    <div class="question">Would you recommend the museum?</div>
+                    <div class="recommend-options">
+                        <div class="recommend-option" data-value="yes">Yes</div>
+                        <div class="recommend-option" data-value="no">No</div>
+                        <div class="recommend-option" data-value="maybe">Maybe</div>
+                    </div>
+
+                    <div class="question">Additional comments</div>
+                    <textarea id="additional-comments" placeholder="Any other feedback"></textarea>
+
+                    <div class="nav-actions">
+                        <button id="feedback-prev-btn" class="left-btn">Back</button>
+                        <button id="feedback-next-btn" class="btn">Next</button>
+                    </div>
+                </div>
+
+                <div id="consent-page" class="page">
+                    <h2>Consent</h2>
+
+                    <div class="consent-check">
+                        <input type="checkbox" id="consent-checkbox" required />
+                        <label for="consent-checkbox" class="consent-text">
+                            I willingly consent to taking part in this survey. My answers may be used for research and service enhancement.
+                        </label>
+                    </div>
+
+                    <div class="nav-actions">
+                        <button id="consent-prev-btn" class="left-btn">Prev</button>
+                        <button id="consent-submit-btn" class="btn">Submit Survey</button>
+                    </div>
+                </div>
+
+                <div id="thank-page" class="page">
+                    <div class="thank">
+                        <div class="success-checkmark">
+                            <div class="check-icon">
+                                <span class="icon-line line-tip"></span>
+                                <span class="icon-line line-long"></span>
+                            </div>
+                        </div>
+                        <h2>Thank you for completing the survey!</h2>
+                        <p class="muted-center">Your responses have been recorded.</p>
+                        <br>
+                        <button onclick="location.reload()" class="left-btn">Submit Another</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- 1. Background Rotation ---
+    const bgImages = document.querySelectorAll('.bg-image');
+    let currentImageIndex = 0;
+    
+    function rotateBackgroundImages() {
+        bgImages[currentImageIndex].classList.remove('active');
+        currentImageIndex = (currentImageIndex + 1) % bgImages.length;
+        bgImages[currentImageIndex].classList.add('active');
+    }
+    setInterval(rotateBackgroundImages, 5000);
+
+    // --- 2. Address Logic ---
+    const barangaysByDistrict = {
+        1: ["Arkong Bato", "Balangkas", "Bignay", "Bisig", "Canumay East", "Canumay West", "Coloong", "Dalandanan", "Isla", "Lawang Bato", "Lingunan", "Mabolo", "Malanday", "Malinta", "Palasan", "Pariancillo Villa", "Pasolo", "Poblacion", "Polo", "Punturin", "Rincon", "Tagalag", "Veinte Reales", "Wawang Pulo"],
+        2: ["Bagbaguin", "General T. de Leon", "Karuhatan", "Mapulang Luma", "Marulas", "Maysan", "Parada", "Paso de Blas", "Ugong"]
+    };
+
+    const barangaySelect = document.getElementById('barangay');
+    const brgyContainer = document.getElementById('barangay-container');
+    const outsideContainer = document.getElementById('outside-container');
+    const districtOptions = document.querySelectorAll('.district-option');
+    let selectedDistrict = null;
+
+    districtOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // UI Selection
+            districtOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedDistrict = this.getAttribute('data-district');
+
+            // Logic: Show Barangay Dropdown OR City Input
+            if (selectedDistrict === 'outside') {
+                brgyContainer.classList.add('hidden');
+                outsideContainer.classList.remove('hidden');
+                barangaySelect.value = ""; // Clear barangay selection
+            } else {
+                outsideContainer.classList.add('hidden');
+                brgyContainer.classList.remove('hidden');
+                document.getElementById('other-specify-input').value = ""; // Clear text input
+
+                // Populate Barangay Dropdown
+                barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                if(barangaysByDistrict[selectedDistrict]) {
+                    barangaysByDistrict[selectedDistrict].forEach(brgy => {
+                        const opt = document.createElement('option');
+                        opt.value = brgy;
+                        opt.textContent = brgy;
+                        barangaySelect.appendChild(opt);
+                    });
+                }
+            }
+        });
+    });
+
+    // --- 3. Page Navigation Logic ---
+    const profilePage = document.getElementById('profile-page');
+    const feedbackPage = document.getElementById('feedback-page');
+    const consentPage = document.getElementById('consent-page');
+    const thankPage = document.getElementById('thank-page');
+
+    function transitionPages(fromPage, toPage) {
+        fromPage.classList.add('exiting');
+        setTimeout(() => {
+            fromPage.classList.remove('active', 'exiting');
+            toPage.classList.add('active');
+        }, 300);
+    }
+
+
+    // ==========================================
+    //          DYNAMIC SURVEY LOGIC
+    // ==========================================
+    const API_URL = "http://localhost:5123/api"; // ✅ Port 5123
+
+    const museumSurveyPage = document.getElementById('museum-survey-page');
+    
+    // UI Elements
+    const questionText = document.getElementById('question-text');
+    const optionsArea = document.getElementById('options-area');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const qIndex = document.getElementById('q-index');
+    const qTotal = document.getElementById('q-total');
+    const progressBar = document.getElementById('progress-bar');
+
+    let museumQuestions = []; 
+    let currentQuestion = 0;
+    const answers = {}; // Stores { QuestionID: Rating }
+
+    // 1. Fetch Questions from Database
+    async function fetchQuestions() {
+        try {
+            const res = await fetch(`${API_URL}/questions`);
+            if (!res.ok) throw new Error("Failed to load");
+            
+            museumQuestions = await res.json();
+            qTotal.textContent = museumQuestions.length;
+            
+            // If no questions, skip to feedback
+            if (museumQuestions.length === 0) return false;
+            
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+
+    // 2. Render Question
+    function loadQuestion(i) {
+        currentQuestion = i;
+        const q = museumQuestions[i];
+        
+        questionText.textContent = q.text;
+        qIndex.textContent = i + 1;
+        progressBar.style.width = ((i + 1) / museumQuestions.length) * 100 + "%";
+
+        prevBtn.textContent = (i === 0) ? "Profile" : "Back";
+        nextBtn.textContent = (i === museumQuestions.length - 1) ? "Next Section" : "Next";
+
+        // Render 5-1 Options
+        optionsArea.innerHTML = "";
+        const labels = ["Excellent", "Good", "Fair", "Poor", "Very Poor"];
+        const values = [5, 4, 3, 2, 1];
+
+        values.forEach((val, idx) => {
+            const div = document.createElement('div');
+            div.className = "option";
+            // Use strong tag for bold number
+            div.innerHTML = `<strong>${val}</strong> - ${labels[idx]}`;
+
+            if (answers[q.id] === val) div.classList.add("selected");
+
+            div.addEventListener('click', () => {
+                answers[q.id] = val;
+                document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                div.classList.add('selected');
+            });
+            optionsArea.appendChild(div);
+        });
+    }
+
+    // 3. Navigation
+    prevBtn.addEventListener('click', () => {
+        if (currentQuestion > 0) loadQuestion(currentQuestion - 1);
+        else transitionPages(museumSurveyPage, profilePage);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        const qId = museumQuestions[currentQuestion].id;
+        if (!answers[qId]) {
+            optionsArea.style.animation = 'shake 0.5s';
+            setTimeout(() => optionsArea.style.animation = '', 500);
+            return;
+        }
+
+        if (currentQuestion < museumQuestions.length - 1) {
+            loadQuestion(currentQuestion + 1);
+        } else {
+            transitionPages(museumSurveyPage, feedbackPage);
+        }
+    });
+
+
+    // Profile -> Survey (Fetch questions first)
+    document.getElementById('profile-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Validation
+        const streetValue = document.getElementById('street-address').value.trim();
+        const ageSelect = document.getElementById('age').value;
+        const outsideInput = document.getElementById('other-specify-input').value.trim();
+        const barangayValue = barangaySelect.value;
+
+        if (!selectedDistrict) {
+            alert("Please select a Location.");
+            return;
+        }
+
+        // Check Smart Address Logic
+        if (selectedDistrict === 'outside' && outsideInput === "") {
+            alert("Please specify your City/Province.");
+            return;
+        }
+        if ((selectedDistrict === '1' || selectedDistrict === '2') && barangayValue === "") {
+            alert("Please select a Barangay.");
+            return;
+        }
+
+        if (ageSelect === "") {
+            alert("Please select your age.");
+            return;
+        }
+
+        const btn = this.querySelector('button');
+        const oldText = btn.textContent;
+        btn.textContent = "Loading...";
+        btn.disabled = true;
+
+        const hasQuestions = await fetchQuestions();
+        
+        btn.textContent = oldText;
+        btn.disabled = false;
+
+        if (hasQuestions) {
+            transitionPages(profilePage, museumSurveyPage);
+            loadQuestion(0);
+        } else {
+            transitionPages(profilePage, feedbackPage);
+        }
+    });
+
+    // Feedback -> Consent
+    const feedbackPrevBtn = document.getElementById('feedback-prev-btn');
+    const feedbackNextBtn = document.getElementById('feedback-next-btn');
+    const recommendOptions = document.querySelectorAll('.recommend-option');
+    let recommendation = "";
+
+    recommendOptions.forEach(opt => {
+        opt.addEventListener('click', function() {
+            recommendOptions.forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+            recommendation = this.getAttribute('data-value');
+        });
+    });
+
+    feedbackPrevBtn.addEventListener('click', function() {
+        // Go back to last survey question if questions exist
+        if (museumQuestions.length > 0) {
+             transitionPages(feedbackPage, museumSurveyPage);
+        } else {
+             transitionPages(feedbackPage, profilePage);
+        }
+    });
+
+    feedbackNextBtn.addEventListener('click', function() {
+        if (!recommendation) {
+            document.querySelector('.recommend-options').style.animation = 'shake 0.5s';
+            setTimeout(() => { document.querySelector('.recommend-options').style.animation = ''; }, 500);
+            return;
+        }
+        transitionPages(feedbackPage, consentPage);
+    });
+
+    // Consent -> Submit
+    const consentPrevBtn = document.getElementById('consent-prev-btn');
+    const consentSubmitBtn = document.getElementById('consent-submit-btn');
+    const consentCheckbox = document.getElementById('consent-checkbox');
+
+    consentPrevBtn.addEventListener('click', function() {
+        transitionPages(consentPage, feedbackPage);
+    });
+
+    consentSubmitBtn.addEventListener('click', function() {
+        if (!consentCheckbox.checked) {
+            document.querySelector('.consent-check').style.animation = 'shake 0.5s';
+            setTimeout(() => { document.querySelector('.consent-check').style.animation = ''; }, 500);
+            return;
+        }
+
+        const originalText = consentSubmitBtn.innerText;
+        consentSubmitBtn.innerText = "Sending...";
+        consentSubmitBtn.disabled = true;
+
+        // Prepare Data
+        const surveyData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            streetAddress: document.getElementById('street-address').value,
+            
+            // Logic: If outside, district is null, otherwise 1 or 2
+            district: (selectedDistrict === 'outside') ? null : selectedDistrict,
+            
+            // Logic: If outside, barangay is null, otherwise use dropdown
+            barangay: (selectedDistrict === 'outside') ? null : barangaySelect.value,
+            
+            // Logic: If outside, use text input
+            otherLocation: (selectedDistrict === 'outside') ? document.getElementById('other-specify-input').value : null,
+            
+            ageRange: document.getElementById('age').value,
+            gender: document.getElementById('gender').value,
+            
+            // Map answers to questions based on ID order
+            ratings: museumQuestions.map(q => answers[q.id] || 0),
+            
+            likedMost: document.getElementById('liked-most').value,
+            improvements: document.getElementById('improvements').value,
+            recommend: recommendation,
+            comments: document.getElementById('additional-comments').value
+        };
+
+        // Send to API
+        // ⚠️ Check your port number from 'dotnet run'
+        fetch(`${API_URL}/submit`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(surveyData)
+        })
+        .then(response => {
+            if (response.ok) {
+                transitionPages(consentPage, thankPage);
+            } else {
+                alert("Error submitting survey. Please try again.");
+                consentSubmitBtn.innerText = originalText;
+                consentSubmitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Could not connect to the server. Is 'dotnet run' active?");
+            consentSubmitBtn.innerText = originalText;
+            consentSubmitBtn.disabled = false;
+        });
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+@DrPioMuseumSurveyAPI_HostAddress = http://localhost:5123
+
+GET {{DrPioMuseumSurveyAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

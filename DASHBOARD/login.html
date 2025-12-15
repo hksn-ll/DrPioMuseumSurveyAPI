@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Dr. Pio Valenzuela Museum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f5f3;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .left {
+            color: white;
+            overflow: hidden;
+            flex: 1.2; 
+            position: relative; 
+        }
+
+        .bg-slideshow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            animation: zoomEffect 20s infinite; 
+        }
+        
+        .slide:nth-child(1) { animation-delay: 0s; background-image: url('1.png'); }
+        .slide:nth-child(2) { animation-delay: 5s; background-image: url('2.png'); }
+        .slide:nth-child(3) { animation-delay: 10s; background-image: url('3.png'); }
+        .slide:nth-child(4) { animation-delay: 15s; background-image: url('4.png'); }
+        .slide:nth-child(5) { animation-delay: 15s; background-image: url('5.png'); }
+
+        @keyframes zoomEffect {
+            0% { opacity: 0; transform: scale(1); }
+            5% { opacity: 1; }
+            25% { opacity: 1; }
+            30% { opacity: 0; transform: scale(1.1); }
+            100% { opacity: 0; }
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(128, 0, 0, 0.85) 0%, rgba(90, 0, 0, 0.9) 100%);
+            z-index: 1; 
+        }
+
+        .left .content {
+            position: relative;
+            z-index: 2; 
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .left h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .left p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .right {
+            background-color: white;
+            flex: 1;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .form-header h2 { 
+            color: #800000; 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+        }
+        .form-header p { 
+            color: #666; 
+        }
+
+        /* Inputs */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="text"], 
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #fcfcfc;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #800000;
+            box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #800000; 
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            background-color: #5a0000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .error {
+            color: #d9534f;
+            background: #fdf2f2;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #d9534f;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .left { min-height: 250px; flex: none; }
+            .right { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="panel left">
+            <div class="bg-slideshow">
+                <div class="slide"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+            </div>
+
+            <div class="overlay"></div>
+
+            <div class="content">
+                <div style="font-size: 4rem; margin-bottom: 10px;">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h1>Admin Portal</h1>
+                <p>Secure access for museum staff and administrators.</p>
+            </div>
+        </div>
+
+        <div class="panel right">
+            <div class="login-wrapper">
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Please sign in to continue managing the system.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+
+                <button class="btn" onclick="handleLogin()">
+                    Sign In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+
+                <p id="error-msg" class="error">
+                    <i class="fas fa-exclamation-circle"></i> Invalid username or password
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            const btn = document.querySelector('button');
+
+            errorMsg.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:5123/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('adminToken', data.token); 
+                    window.location.href = 'admin.html';
+                } else {
+                    throw new Error("Invalid");
+                }
+            } catch (err) {
+                errorMsg.style.display = 'block';
+                if(err.message === "Invalid") {
+                    errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Incorrect username or password';
+                } else {
+                    errorMsg.innerHTML = '<i class="fas fa-wifi"></i> Cannot connect to server';
+                }
+                btn.innerHTML = 'Sign In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+    </script>
+</body>
+</html>
