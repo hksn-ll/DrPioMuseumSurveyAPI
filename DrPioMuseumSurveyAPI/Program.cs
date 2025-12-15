@@ -130,6 +130,38 @@ app.MapDelete("/api/submit/{id}", async (AppDbContext db, int id) =>
     await db.SaveChangesAsync();
     return Results.Ok();
 });
+// --- START OF AUTO-FIX CODE ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try 
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        // This command forces the database to create all missing tables immediately
+        context.Database.Migrate();
+
+        // OPTIONAL: Create a default Admin user so you can actually log in
+        if (!context.Admins.Any())
+        {
+            // Note: Ensure you have "using DrPioMuseumSurveyAPI.Models;" at the top
+            // and that BCrypt is installed. If this part errors, remove the seeding logic.
+            context.Admins.Add(new Admin 
+            { 
+                Username = "admin", 
+                // This creates a password "admin123"
+                Password = BCrypt.Net.BCrypt.HashPassword("admin123") 
+            });
+            context.SaveChanges();
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred creating the DB.");
+    }
+}
+// --- END OF AUTO-FIX CODE ---
+
 
 app.Run();
 
