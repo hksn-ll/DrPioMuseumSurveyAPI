@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DrPioMuseumSurveyAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+100bdbfc835a6062aed4e786847fef191f4a3776")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8698905f3e656b2bd1cce78fb12ed08b113b346")]
 [assembly: System.Reflection.AssemblyProductAttribute("DrPioMuseumSurveyAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DrPioMuseumSurveyAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
