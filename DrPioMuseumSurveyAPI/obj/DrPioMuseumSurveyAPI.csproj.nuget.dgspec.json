@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mayu\\source\\repos\\DrPioMuseumSurveyAPI - Copy\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj": {}
+    "C:\\Users\\Mayu\\Documents\\GitHub\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mayu\\source\\repos\\DrPioMuseumSurveyAPI - Copy\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj": {
+    "C:\\Users\\Mayu\\Documents\\GitHub\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mayu\\source\\repos\\DrPioMuseumSurveyAPI - Copy\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Mayu\\Documents\\GitHub\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj",
         "projectName": "DrPioMuseumSurveyAPI",
-        "projectPath": "C:\\Users\\Mayu\\source\\repos\\DrPioMuseumSurveyAPI - Copy\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj",
+        "projectPath": "C:\\Users\\Mayu\\Documents\\GitHub\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI.csproj",
         "packagesPath": "C:\\Users\\Mayu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mayu\\source\\repos\\DrPioMuseumSurveyAPI - Copy\\DrPioMuseumSurveyAPI\\obj\\",
+        "outputPath": "C:\\Users\\Mayu\\Documents\\GitHub\\DrPioMuseumSurveyAPI\\DrPioMuseumSurveyAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
